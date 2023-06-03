@@ -1,4 +1,4 @@
-package com.example.android.politicalpreparedness.representative
+package com.example.android.politicalpreparedness.representative.view
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -15,12 +15,13 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.android.politicalpreparedness.R
 import com.example.android.politicalpreparedness.databinding.FragmentRepresentativeBinding
 import com.example.android.politicalpreparedness.network.models.Address
-import com.example.android.politicalpreparedness.representative.adapter.RepresentativeListAdapter
-import com.example.android.politicalpreparedness.representative.adapter.RepresentativeListener
+import com.example.android.politicalpreparedness.representative.view.adapter.RepresentativeListAdapter
+import com.example.android.politicalpreparedness.representative.view.adapter.RepresentativeListener
+import com.example.android.politicalpreparedness.representative.viewmodel.RepresentativeViewModel
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.snackbar.Snackbar
 import timber.log.Timber
-import java.util.Locale
+import java.util.*
 
 class DetailFragment : Fragment() {
 

@@ -10,7 +10,7 @@
 
         <variable
             name="clickListener"
-            type="com.example.android.politicalpreparedness.election.adapter.ElectionListener" />
+            type="com.example.android.politicalpreparedness.election.view.adapter.ElectionListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -41,7 +41,7 @@
             android:layout_marginTop="@dimen/default_padding"
             android:layout_marginEnd="@dimen/default_padding"
             android:layout_marginBottom="@dimen/default_padding"
-            app:day="@{election.electionDay}"
+            app:electionDay="@{election.electionDay}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

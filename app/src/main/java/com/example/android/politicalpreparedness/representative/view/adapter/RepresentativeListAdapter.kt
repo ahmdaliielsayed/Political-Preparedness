@@ -1,4 +1,4 @@
-package com.example.android.politicalpreparedness.representative.adapter
+package com.example.android.politicalpreparedness.representative.view.adapter
 
 import android.content.Intent
 import android.content.Intent.ACTION_VIEW

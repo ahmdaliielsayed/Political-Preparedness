@@ -1,4 +1,4 @@
-package com.example.android.politicalpreparedness.representative.adapter
+package com.example.android.politicalpreparedness.representative.view.adapter
 
 import android.view.View
 import android.widget.*
@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.android.politicalpreparedness.R
 import com.example.android.politicalpreparedness.representative.model.Representative
-import com.example.android.politicalpreparedness.utils.CivicsApiStatus
+import com.example.android.politicalpreparedness.utils.UpcomingImageStatus
 
 @BindingAdapter("representativeList")
 fun RecyclerView.setRepresentativeData(data: List<Representative>?) {
@@ -68,15 +68,15 @@ fun setStateListener(spinner: Spinner, stateChange: InverseBindingListener?) {
 }
 
 @BindingAdapter("apiStatus")
-fun TextView.setStatus(status: CivicsApiStatus?) {
+fun TextView.setStatus(status: UpcomingImageStatus?) {
     when (status) {
-        CivicsApiStatus.LOADING -> {
+        UpcomingImageStatus.LOADING -> {
             text = resources.getString(R.string.status_loading)
         }
-        CivicsApiStatus.ERROR -> {
+        UpcomingImageStatus.ERROR -> {
             text = resources.getString(R.string.status_error)
         }
-        CivicsApiStatus.DONE -> {
+        UpcomingImageStatus.DONE -> {
             text = ""
         }
         else -> {

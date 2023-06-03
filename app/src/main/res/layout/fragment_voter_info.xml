@@ -10,7 +10,7 @@
 
         <variable
             name="voterInfoViewModel"
-            type="com.example.android.politicalpreparedness.election.VoterInfoViewModel" />
+            type="com.example.android.politicalpreparedness.election.viewmodel.VoterInfoViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -33,7 +33,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/default_padding"
-            app:day="@{voterInfoViewModel.election.electionDay}"
+            app:electionDay="@{voterInfoViewModel.election.electionDay}"
             app:layout_constraintTop_toBottomOf="@id/election_name"
             tools:text="12 November 2055" />
 
@@ -103,7 +103,7 @@
             android:onClick="@{() -> voterInfoViewModel.toggleFollowElection()}"
             android:text="@string/follow_election"
             android:textColor="@color/white"
-            app:followOrUnfollow="@{voterInfoViewModel.isElectionSaved}"
+            app:electionButtonText="@{voterInfoViewModel.isElectionSaved}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

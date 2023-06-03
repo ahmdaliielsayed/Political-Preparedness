@@ -1,10 +1,10 @@
-package com.example.android.politicalpreparedness.representative
+package com.example.android.politicalpreparedness.representative.viewmodel
 
 import androidx.lifecycle.*
 import com.example.android.politicalpreparedness.network.CivicsApi
 import com.example.android.politicalpreparedness.network.models.Address
 import com.example.android.politicalpreparedness.representative.model.Representative
-import com.example.android.politicalpreparedness.utils.CivicsApiStatus
+import com.example.android.politicalpreparedness.utils.UpcomingImageStatus
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -12,9 +12,9 @@ class RepresentativeViewModel(private val savedHandle: SavedStateHandle) : ViewM
 
     private val _apiService = CivicsApi.retrofitService
 
-    private val _apiStatus: MutableLiveData<CivicsApiStatus> = MutableLiveData()
-    val apiStatus: LiveData<CivicsApiStatus>
-        get() = _apiStatus
+    private val _imageStatus: MutableLiveData<UpcomingImageStatus> = MutableLiveData()
+    val imageStatus: LiveData<UpcomingImageStatus>
+        get() = _imageStatus
 
     private val _representatives = MutableLiveData<List<Representative>?>()
     val representatives: MutableLiveData<List<Representative>?>
@@ -37,7 +37,7 @@ class RepresentativeViewModel(private val savedHandle: SavedStateHandle) : ViewM
     }
 
     fun getRepresentativesList(address: Address?) {
-        _apiStatus.value = CivicsApiStatus.LOADING
+        _imageStatus.value = UpcomingImageStatus.LOADING
 
         viewModelScope.launch {
             _representatives.value = arrayListOf()
@@ -48,13 +48,13 @@ class RepresentativeViewModel(private val savedHandle: SavedStateHandle) : ViewM
                     _representatives.value =
                         offices.flatMap { office -> office.getRepresentatives(officials) }
                     savedHandle["representatives"] = _representatives.value
-                    _apiStatus.value = CivicsApiStatus.DONE
+                    _imageStatus.value = UpcomingImageStatus.DONE
                 } catch (e: Exception) {
                     Timber.e(
                         "Error: %s",
                         e.localizedMessage
                     )
-                    _apiStatus.value = CivicsApiStatus.ERROR
+                    _imageStatus.value = UpcomingImageStatus.ERROR
                 }
             }
         }

@@ -1,4 +1,4 @@
-package com.example.android.politicalpreparedness.election
+package com.example.android.politicalpreparedness.election.view
 
 import android.content.Intent
 import android.net.Uri
@@ -13,14 +13,22 @@ import androidx.navigation.fragment.findNavController
 import com.example.android.politicalpreparedness.R
 import com.example.android.politicalpreparedness.database.ElectionDatabase
 import com.example.android.politicalpreparedness.databinding.FragmentVoterInfoBinding
+import com.example.android.politicalpreparedness.election.repo.VoterInfoRepository
+import com.example.android.politicalpreparedness.election.viewmodel.VoterInfoViewModel
+import com.example.android.politicalpreparedness.election.viewmodel.VoterInfoViewModelFactory
 import com.example.android.politicalpreparedness.network.CivicsApi
-import com.example.android.politicalpreparedness.utils.CivicsApiStatus
+import com.example.android.politicalpreparedness.utils.UpcomingImageStatus
 import timber.log.Timber
 
 class VoterInfoFragment : Fragment() {
 
     private val viewModel by viewModels<VoterInfoViewModel> {
-        VoterInfoViewModelFactory(ElectionDatabase.getInstance(requireContext()).electionDao, CivicsApi.retrofitService)
+        VoterInfoViewModelFactory(
+            VoterInfoRepository.getInstance(
+                ElectionDatabase.getInstance(requireContext()).electionDao,
+                CivicsApi.retrofitService
+            )
+        )
     }
 
     override fun onCreateView(
@@ -28,7 +36,10 @@ class VoterInfoFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val voterInfoFragmentArgs = VoterInfoFragmentArgs.fromBundle(requireArguments())
+        val voterInfoFragmentArgs =
+            VoterInfoFragmentArgs.fromBundle(
+                requireArguments()
+            )
         val electionId = voterInfoFragmentArgs.argElectionId
         val division = voterInfoFragmentArgs.argDivision
 
@@ -52,7 +63,7 @@ class VoterInfoFragment : Fragment() {
 
         viewModel.apiStatus.observe(viewLifecycleOwner) {
             it?.let {
-                if (it == CivicsApiStatus.ERROR) showRequestErrorDialog()
+                if (it == UpcomingImageStatus.ERROR) showRequestErrorDialog()
             }
         }
 

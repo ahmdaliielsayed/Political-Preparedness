@@ -1,24 +1,23 @@
-package com.example.android.politicalpreparedness.election
+package com.example.android.politicalpreparedness.election.viewmodel
 
 import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.android.politicalpreparedness.database.ElectionDao
-import com.example.android.politicalpreparedness.network.CivicsApiService
+import com.example.android.politicalpreparedness.election.repo.VoterInfoRepoInterface
 import com.example.android.politicalpreparedness.network.models.AdministrationBody
 import com.example.android.politicalpreparedness.network.models.Division
 import com.example.android.politicalpreparedness.network.models.Election
 import com.example.android.politicalpreparedness.network.models.VoterInfoResponse
-import com.example.android.politicalpreparedness.utils.CivicsApiStatus
+import com.example.android.politicalpreparedness.utils.UpcomingImageStatus
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-class VoterInfoViewModel(private val dataSource: ElectionDao, private val apiService: CivicsApiService) : ViewModel() {
+class VoterInfoViewModel(private val voterInfoRepo: VoterInfoRepoInterface) : ViewModel() {
 
-    private val _apiStatus = MutableLiveData<CivicsApiStatus>()
-    val apiStatus: LiveData<CivicsApiStatus>
+    private val _apiStatus = MutableLiveData<UpcomingImageStatus>()
+    val apiStatus: LiveData<UpcomingImageStatus>
         get() = _apiStatus
 
     private val _election = MutableLiveData<Election>()
@@ -42,28 +41,33 @@ class VoterInfoViewModel(private val dataSource: ElectionDao, private val apiSer
     val correspondenceAddress = _voterInfo.value?.state?.first()?.electionAdministrationBody?.correspondenceAddress?.toFormattedString()
 
     fun getVoterInformation(electionId: Int, division: Division) {
-        _apiStatus.value = CivicsApiStatus.LOADING
+        _apiStatus.value = UpcomingImageStatus.LOADING
 
         viewModelScope.launch {
             try {
-                val savedElection = dataSource.getElection(electionId)
+                val savedElection = voterInfoRepo.getElectionById(electionId)
                 _isElectionSaved.value = savedElection != null
 
                 val address = "${division.state}, ${division.country}"
-                val voterInfoResponse = apiService.getVoterInfo(address, electionId)
+                val voterInfoResponse = voterInfoRepo.getVoterInfo(address, electionId)
 
-                _voterInfo.value = voterInfoResponse
+                if (voterInfoResponse.isSuccessful) {
+                    _voterInfo.value = voterInfoResponse.body()
 
-                Timber.d("voterInfoResponse, %s", voterInfoResponse)
-                _election.value = voterInfoResponse.election
+                    Timber.d("voterInfoResponse, %s", voterInfoResponse)
+                    _election.value = voterInfoResponse.body()?.election
 
-                Timber.d("AdministrationBody: %s", voterInfoResponse.state?.first()?.electionAdministrationBody)
-                _administrationBody.value = voterInfoResponse.state?.first()?.electionAdministrationBody
+                    Timber.d("AdministrationBody: %s", voterInfoResponse.body()?.state?.first()?.electionAdministrationBody)
+                    _administrationBody.value = voterInfoResponse.body()?.state?.first()?.electionAdministrationBody
 
-                _apiStatus.value = CivicsApiStatus.DONE
+                    _apiStatus.value = UpcomingImageStatus.DONE
+                } else {
+                    Timber.e(voterInfoResponse.message())
+                    _apiStatus.value = UpcomingImageStatus.ERROR
+                }
             } catch (e: Exception) {
                 Timber.e("Error when retrieving voter information")
-                _apiStatus.value = CivicsApiStatus.ERROR
+                _apiStatus.value = UpcomingImageStatus.ERROR
             }
         }
     }
@@ -80,10 +84,10 @@ class VoterInfoViewModel(private val dataSource: ElectionDao, private val apiSer
         viewModelScope.launch {
             _election.value?.let {
                 if (_isElectionSaved.value == true) {
-                    dataSource.deleteElection(it)
+                    voterInfoRepo.deleteLocalElection(it)
                     _isElectionSaved.value = false
                 } else {
-                    dataSource.insertElection(it)
+                    voterInfoRepo.insertLocalElections(it)
                     _isElectionSaved.value = true
                 }
             }

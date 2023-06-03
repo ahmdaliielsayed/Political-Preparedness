@@ -1,4 +1,4 @@
-package com.example.android.politicalpreparedness.election
+package com.example.android.politicalpreparedness.election.view
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,8 +9,11 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.android.politicalpreparedness.database.ElectionDatabase
 import com.example.android.politicalpreparedness.databinding.FragmentElectionBinding
-import com.example.android.politicalpreparedness.election.adapter.ElectionListAdapter
-import com.example.android.politicalpreparedness.election.adapter.ElectionListener
+import com.example.android.politicalpreparedness.election.repo.ElectionsRepository
+import com.example.android.politicalpreparedness.election.view.adapter.ElectionListAdapter
+import com.example.android.politicalpreparedness.election.view.adapter.ElectionListener
+import com.example.android.politicalpreparedness.election.viewmodel.ElectionsViewModel
+import com.example.android.politicalpreparedness.election.viewmodel.ElectionsViewModelFactory
 import com.example.android.politicalpreparedness.network.CivicsApi
 import com.example.android.politicalpreparedness.network.models.Election
 
@@ -18,8 +21,10 @@ class ElectionsFragment : Fragment() {
 
     private val viewModel by viewModels<ElectionsViewModel> {
         ElectionsViewModelFactory(
-            ElectionDatabase.getInstance(requireContext()).electionDao,
-            CivicsApi.retrofitService
+            ElectionsRepository.getInstance(
+                ElectionDatabase.getInstance(requireContext()).electionDao,
+                CivicsApi.retrofitService
+            )
         )
     }
 
@@ -37,21 +42,21 @@ class ElectionsFragment : Fragment() {
 
             recyclerUpcoming.adapter = ElectionListAdapter(
                 ElectionListener {
-                    viewModel.displayVoterInfo(it)
+                    viewModel.displayElectionInfo(it)
                 }
             )
 
             recyclerSaved.adapter = ElectionListAdapter(
                 ElectionListener {
-                    viewModel.displayVoterInfo(it)
+                    viewModel.displayElectionInfo(it)
                 }
             )
         }
 
-        viewModel.navigateToVoterInfo.observe(viewLifecycleOwner) {
+        viewModel.navigateToElectionInfo.observe(viewLifecycleOwner) {
             if (null != it) {
                 navigateToDetailFragment(it)
-                viewModel.displayVoterInfoComplete()
+                viewModel.displayElectionInfoComplete()
             }
         }
 

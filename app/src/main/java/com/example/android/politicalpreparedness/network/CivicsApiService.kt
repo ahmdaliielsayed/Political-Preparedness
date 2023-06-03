@@ -9,6 +9,7 @@ import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterF
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.adapters.Rfc3339DateJsonAdapter
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
@@ -37,13 +38,13 @@ private val retrofit = Retrofit.Builder()
 
 interface CivicsApiService {
     @GET("elections")
-    suspend fun getElections(): ElectionResponse
+    suspend fun getElections(): Response<ElectionResponse>
 
     @GET("voterinfo")
     suspend fun getVoterInfo(
         @Query("address") address: String,
         @Query("electionId") electionId: Int
-    ): VoterInfoResponse
+    ): Response<VoterInfoResponse>
 
     @GET("representatives")
     suspend fun getRepresentatives(@Query("address") address: String): RepresentativeResponse

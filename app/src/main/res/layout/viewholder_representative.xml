@@ -4,13 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="representative"
             type="com.example.android.politicalpreparedness.representative.model.Representative" />
 
         <variable
             name="clickListener"
-            type="com.example.android.politicalpreparedness.representative.adapter.RepresentativeListener" />
+            type="com.example.android.politicalpreparedness.representative.view.adapter.RepresentativeListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -50,6 +51,7 @@
             android:layout_width="@dimen/margin_0"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/default_padding"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="@dimen/default_padding"
             android:text="@{representative.official.name}"
             app:layout_constraintEnd_toStartOf="@id/www_icon"
@@ -76,6 +78,7 @@
             android:layout_height="@dimen/margin_24"
             android:layout_marginEnd="@dimen/default_padding"
             android:contentDescription="@string/website"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/facebook_icon"
             app:layout_constraintTop_toTopOf="parent"
@@ -87,6 +90,7 @@
             android:layout_height="@dimen/margin_24"
             android:layout_marginEnd="@dimen/default_padding"
             android:contentDescription="@string/facebook"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/twitter_icon"
             app:layout_constraintTop_toTopOf="parent"
@@ -98,6 +102,7 @@
             android:layout_height="@dimen/margin_24"
             android:layout_marginEnd="@dimen/default_padding"
             android:contentDescription="@string/twitter"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"

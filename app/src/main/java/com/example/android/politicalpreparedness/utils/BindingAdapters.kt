@@ -7,31 +7,31 @@ import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.android.politicalpreparedness.R
-import com.example.android.politicalpreparedness.election.adapter.ElectionListAdapter
+import com.example.android.politicalpreparedness.election.view.adapter.ElectionListAdapter
 import com.example.android.politicalpreparedness.network.models.Election
 import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
 
-@BindingAdapter("listData")
-fun RecyclerView.setElectionData(data: List<Election>?) {
+@BindingAdapter("electionList")
+fun RecyclerView.setElectionData(electionList: List<Election>?) {
     val adapter = adapter as ElectionListAdapter
-    adapter.submitList(data)
+    adapter.submitList(electionList)
 }
 
-@BindingAdapter("civicsApiStatus")
-fun bindApiStatus(statusImageView: ImageView, status: CivicsApiStatus?) {
+@BindingAdapter("upcomingImage")
+fun bindApiStatus(imageView: ImageView, status: UpcomingImageStatus?) {
     when (status) {
-        CivicsApiStatus.LOADING -> {
-            statusImageView.visibility = View.VISIBLE
-            statusImageView.setImageResource(R.drawable.loading_animation)
+        UpcomingImageStatus.LOADING -> {
+            imageView.visibility = View.VISIBLE
+            imageView.setImageResource(R.drawable.loading_animation)
         }
-        CivicsApiStatus.ERROR -> {
-            statusImageView.visibility = View.VISIBLE
-            statusImageView.setImageResource(R.drawable.ic_connection_error)
+        UpcomingImageStatus.ERROR -> {
+            imageView.visibility = View.VISIBLE
+            imageView.setImageResource(R.drawable.ic_connection_error)
         }
-        CivicsApiStatus.DONE -> {
-            statusImageView.visibility = View.GONE
+        UpcomingImageStatus.DONE -> {
+            imageView.visibility = View.GONE
         }
         else -> {
             Timber.e("Error: %s", "Null state!")
@@ -39,19 +39,19 @@ fun bindApiStatus(statusImageView: ImageView, status: CivicsApiStatus?) {
     }
 }
 
-@BindingAdapter("day")
+@BindingAdapter("electionDay")
 fun TextView.setElectionDay(date: Date?) {
     val calendar = Calendar.getInstance()
-    date?.let {
-        calendar.time = it
+    date?.let { dateTime ->
+        calendar.time = dateTime
         val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         text = dateFormat.format(calendar.time)
     }
 }
 
-@BindingAdapter("followOrUnfollow")
-fun Button.followOrUnfollow(hasSaved: Boolean?) {
-    hasSaved?.let {
+@BindingAdapter("electionButtonText")
+fun Button.isElectionSaved(isSaved: Boolean?) {
+    isSaved?.let {
         text =
             if (it) resources.getString(R.string.unfollow_btn) else resources.getString(R.string.follow_btn)
     }
