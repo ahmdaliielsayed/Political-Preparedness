@@ -6,7 +6,7 @@ class CivicsHttpClient : OkHttpClient() {
 
     companion object {
 
-        const val API_KEY = "AIzaSyBuifgZOUWIl6HGawf30Rjt-1917qXRwis" // TODO: Place your API Key Here
+        private const val API_KEY = "" // TODO: Place your API Key Here
 
         fun getClient(): OkHttpClient {
             return Builder()
